@@ -2,34 +2,42 @@
   div.synth
     el-button.key(
       v-for='note in notes'
-      v-bind:class='{ "is-down": note.isPlaying }'
+      v-bind:class='{ "is-down": note.isPlaying, "is-flat": note.isFlat }'
       v-bind:key='note.frequency'
       v-on:mousedown.native='play(note)'
       v-on:mouseup.native='stop(note)'
     )
       | {{ note.name }}
+      span.flat(v-show='note.isFlat') &#9837;
       sub {{ note.octave }}
 </template>
 
 <script>
+const c2 = 65.4064
+const equalTemperamentRatio = 1.059463
+const noteNames = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
+let notesData = []
+for (let i = 0; i <= 48; i++) {
+  notesData.push({
+    frequency: c2 * Math.pow(equalTemperamentRatio, i),
+    name: noteNames[i % 12][0],
+    isFlat: noteNames[i % 12].includes('b'),
+    octave: (i - (i % 12)) / 12 + 2
+  })
+}
+
 export default {
 
   name: 'Synth',
 
   data () {
     return {
-      notes: [
-        { name: 'A', octave: 3, frequency: 220.000, isPlaying: false, waaOscillator: null, waaGain: null },
-        { name: 'B', octave: 3, frequency: 246.942, isPlaying: false, waaOscillator: null, waaGain: null },
-        { name: 'C', octave: 4, frequency: 261.626, isPlaying: false, waaOscillator: null, waaGain: null },
-        { name: 'D', octave: 4, frequency: 293.665, isPlaying: false, waaOscillator: null, waaGain: null },
-        { name: 'E', octave: 4, frequency: 329.628, isPlaying: false, waaOscillator: null, waaGain: null },
-        { name: 'F', octave: 4, frequency: 349.228, isPlaying: false, waaOscillator: null, waaGain: null },
-        { name: 'G', octave: 4, frequency: 391.995, isPlaying: false, waaOscillator: null, waaGain: null },
-        { name: 'A', octave: 4, frequency: 440.000, isPlaying: false, waaOscillator: null, waaGain: null },
-        { name: 'B', octave: 4, frequency: 493.883, isPlaying: false, waaOscillator: null, waaGain: null },
-        { name: 'C', octave: 5, frequency: 523.251, isPlaying: false, waaOscillator: null, waaGain: null }
-      ],
+      notes: notesData.map(noteDatum => ({
+        ...noteDatum,
+        isPlaying: false,
+        waaOscillator: null,
+        waaGain: null
+      })),
       waaAudioContext: new window.AudioContext()
     }
   },
@@ -73,12 +81,25 @@ export default {
   height: 100%
   padding: 100px
   text-align: center
+  vertical-align: top
   width: 100%
 
 .key
   border-color: rgb(191, 203, 217)
   color: rgb(31, 45, 61)
+  font-size: 7pt
+  height: 100px
+  margin: 10px
+  padding: 5px
+  width: 30px
+  &.is-flat
+    background-color: #000
+    border-color: #000
+    color: #fff
   &.is-down
     border-color: rgb(29, 144, 230)
     color: rgb(29, 144, 230)
+
+.flat
+  font-size: 6pt
 </style>
