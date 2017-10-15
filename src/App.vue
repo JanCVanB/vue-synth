@@ -1,7 +1,6 @@
-<template>
-  <div id="app">
-    <synth/>
-  </div>
+<template lang="pug">
+  div#app
+    synth
 </template>
 
 <script>
@@ -18,5 +17,5 @@ export default {
 }
 </script>
 
-<style>
+<style lang="sass">
 </style>

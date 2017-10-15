@@ -1,7 +1,5 @@
-<template>
-  <div class="synth">
-    Insert synth here
-  </div>
+<template lang="pug">
+  div.synth Insert synth here
 </template>
 
 <script>
@@ -17,5 +15,5 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="sass" scoped>
 </style>
